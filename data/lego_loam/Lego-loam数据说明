@@ -1,0 +1,21 @@
+laser_2_camera_init 记录了从话题“laser_2_camera_init”订阅到的位姿，该话题由featureAssciation节点发布。它表示了激光在相机初始位置坐标系下的位姿。
+
+aft_mapped.txt  记录了从话题“/aft_mapped_to_init”订阅得到的位姿，该话题由mapOptimization节点发布，表示经过camera在camera初始坐标系下的位姿，查看数据，可以发现其位姿只有一千多个，与发布的数据个数不相同，这是因为优化不是实时的。
+
+camera_2_camera_init.txt 是记录了从"/integrated_to_init”话题得到的位姿，该话题由transformFusion节点发布，其个数与发布的雷达数据的个数相同。
+
+我们将aft_mapped.txt和camera_2_camera_init.txt两个位姿的轨迹显示出来，两个轨迹几乎一样，camera_2_camera_init.txt实际只是aft_mapped.txt做了一个插值。
+
+lego-loam实际做了如下处理：
+
+（1） 点云分割。 
+
+（2） 特征关联，会订阅特征关联的结果。可以得到一个F2F实现的里程计，由于处理这个不费时间，几乎可以认为是实时的，进来多少数据就可以处理多少数据。
+
+（3） mapOptimization节点订阅“laser_2_camera_init”。
+
+
+（4） Transformfusion订阅“/aft_mapped_to_init”和“laser_2_camera_init”话题，发布"/integrated_to_init”。它的干的事其实很简单，就是对速度积分
+
+	integrated_pose=aft_mapped_pose+v*t
+

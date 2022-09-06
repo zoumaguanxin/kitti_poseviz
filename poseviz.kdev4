@@ -1,4 +1,3 @@
 [Project]
-Name=poseviz
 Manager=KDevCMakeManager
-VersionControl=kdevgit
+Name=poseviz
